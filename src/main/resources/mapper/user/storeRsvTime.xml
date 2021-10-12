@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mr.mr_api.user.repository.StoreRsvTimeRepository">
+  
+  <select id="getListOfDay" resultType="com.mr.mr_api.user.entity.time.TimeRsvEnt">
+		/** getListOfItem **/
+		SELECT 
+			`srt`.`store_rsv_day_id`
+			,`srt`.`rsv_tm`
+			,`srt`.`create_tms`
+		FROM tb_store_rsv_time `srt`
+		LEFT JOIN tb_store_rsv_day `srd` ON `srt`.`store_rsv_day_id` = `srd`.`id`
+		WHERE
+			`srd`.`store_id` = #{storeId}
+			AND `srd`.`day_cd` = #{dayCd}
+  </select>
+
+</mapper>

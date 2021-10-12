@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make Reservation 회원가입 인증</title>
+</head>
+<body>
+  <div style="background-color: #f5f5f5; width: 100%; padding: 10px 0;">
+    <div style="border: 1px solid #ddd; width: 700px; margin: 0 auto; border-radius: 3px;">
+      <!-- header -->
+      <div style="background-color: #2d3a45; padding: 10px 10px; border-radius: 3px 3px 0 0;">
+        <a href="http://115.85.183.48/" target="_blank" style="color: #fff; text-decoration: none; font-size: 14px;">
+          www.makereservation.com
+        </a>
+      </div>
+
+      <!-- logo -->
+      <div style="background-color: #fff; padding: 40px;">
+        <p style="text-align: center; margin: 0; font-weight: bold; font-size: 25px; color: #4F46E5;">Make Reservation</p>
+      </div>
+      
+      <!-- contents -->
+      <div style="padding: 45px 10px;">
+        <p style="margin: 0 0 25px 0; font-size: 23px;">
+          <span style="color: #4F46E5; font-weight: bold;" th:text="${nickName}"></span>님 안녕하세요.<br/>
+          Make Reservation가입신청을 진심으로 환영합니다. 👏
+        </p>
+        <p style="margin: 0; font-size: 17px; line-height: 30px;">
+          본 이메일 인증은 Make Reservation 회원가입을 위한 필수 사항입니다.<br/>
+          아래 인증번호를 Make Reservation홈페이지에 입력하여 회원가입 절차를 완료하여 주시기 바랍니다.
+        </p>
+        <p style="margin: 20px 0; border: 1px solid #2d3a45; border-radius: 3px; text-align: center; padding: 20px 0; font-weight: bold; font-size: 20px; border-style: dashed;">
+          인증번호 : <span th:text="${authKey}"></span>
+        </p>
+        <p style="margin: 0; color: crimson; font-weight: bold; font-size: 13px;">
+          * 가입신청 당일 자정(23:59:59)까지 인증 절차를 완료하지 않을 경우, 가입하신 계정은 자동 삭제됩니다.
+        </p>
+      </div>
+      
+      <!-- footer -->
+      <div style="background-color: #2d3a45; padding: 35px 10px 18px 10px; border-radius: 0 0 3px 3px; color: #fff; font-size: 13px;">
+        <ul style="margin: 0; padding: 0; list-style: none;">
+          <li>Maker Reservation 고객센터</li>
+          <li style="margin-top: 10px; margin-bottom: 25px;">전화 : 010-5237-4945 | 이메일 : peel0220@gmail.com</li>
+          <li style="font-size: 11px;">본 메일은 발신전용입니다. 궁금하신 점이나 불편한 사항은 고객센터에 문의해 주시기 바랍니다.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

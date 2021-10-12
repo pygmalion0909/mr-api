@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mr.mr_api.user.repository.ItemBasRepository">
+  
+  <select id="getListOfDay" resultType="com.mr.mr_api.user.entity.item.ItemRsvEnt">
+    /** getListOfDay **/
+      SELECT 
+      	`itb`.`id`
+        ,`itb`.`store_id`
+        ,`itb`.`name`
+        ,`itb`.`desc`
+        ,`itb`.`per_tm`
+        ,`itb`.`price`
+        ,`itb`.`create_tms`
+        ,`itb`.`modify_tms`
+      FROM
+      (
+	      SELECT 
+	      	`sri`.`item_id`
+	      FROM 
+	      	tc_store_rsv_item `sri`
+	      LEFT JOIN tb_store_rsv_day `srd` ON `sri`.`store_rsv_day_id` = `srd`.`id`
+	      WHERE
+	      	`srd`.`store_id` = #{storeId}
+	        AND `srd`.`day_cd` = #{dayCd}
+	    )`sq1`
+	    LEFT JOIN tb_item_bas `itb` ON `sq1`.`item_id` = `itb`.`id`
+  </select>
+
+</mapper>

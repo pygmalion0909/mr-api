@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mr.mr_api.user.repository.BadgeRepository">
+
+	<select id="getListOfInfo" resultType="com.mr.mr_api.user.dto.badge.BadgeInfoDto">
+	/** getListOfInfo **/
+    SELECT
+      `bad`.`id`
+      ,`bad`.`store_id`
+      ,`bad`.`cd`
+      ,`bad`.`score`
+      ,`cod`.`group`
+      ,`cod`.`name`
+      ,(SELECT `cod2`.name FROM tb_code `cod2` WHERE `cod`.id = `cod2`.ref_id) AS color
+    FROM tb_badge `bad` 
+    LEFT JOIN tb_code `cod` ON `bad`.cd = `cod`.cd
+    WHERE
+      `bad`.store_id = #{storeId}
+	</select>
+
+</mapper>

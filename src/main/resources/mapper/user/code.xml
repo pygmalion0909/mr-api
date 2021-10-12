@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mr.mr_api.user.repository.CodeRepository">
+
+	<select id="getList" resultType="com.mr.mr_api.user.dto.code.CodeDto">
+	/** getList **/
+    SELECT
+      `cod`.`id`
+      ,`cod`.`cd`
+      ,`cod`.`name`
+      ,`cod`.`ref_id`
+      ,`cod`.`group`
+    FROM tb_code `cod`
+    WHERE
+      `cod`.`group` = #{group}
+      <if test="id != null and id != ''">
+        AND `cod`.`id` = #{id}
+      </if>
+      <if test="cd != null and cd != ''">
+        AND `cod`.`cd` = #{cd}
+      </if>
+      <if test="name != null and name != ''">
+        AND `cod`.`name` = #{name}
+      </if>
+      <if test="refId != null and refId != ''">
+        AND `cod`.`ref_id` = #{refId}
+      </if>
+	</select>
+
+</mapper>

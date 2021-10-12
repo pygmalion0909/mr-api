@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mr.mr_api.user.repository.MemberRepository">
+  
+  <select id="getOneOfSecret" resultType="com.mr.mr_api.user.entity.user.UserSecretEnt">
+  <!-- getOneOfSecret -->
+    SELECT 
+      `meb`.`id`
+      ,`meb`.`login_id`
+      ,`meb`.`role_cd`
+      ,`meb`.`nick_name`
+      ,`meb`.`passwd`
+      ,`meb`.`email`
+      ,`meb`.`status_cd`
+      ,`meb`.`auth_key`
+      ,`meb`.`create_tms`
+      ,`meb`.`approval_tms`
+      ,`meb`.`modify_tms`
+    FROM
+      tb_member_bas `meb`
+    WHERE
+      `meb`.`login_id` = #{loginId}
+      <if test="statusCd != null and statusCd != ''">
+        AND `meb`.`status_cd` = #{statusCd}
+      </if>
+  </select>
+
+  <select id="getCountOfDupl" resultType="int">
+  <!-- getCountOfDupl -->
+    SELECT 
+      COUNT(`meb`.`id`)
+    FROM
+      tb_member_bas `meb`
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="email != null and email != ''">
+        `meb`.`role_cd` = #{roleCd}
+        AND `meb`.`email` = #{email}
+      </if>
+      <if test="loginId != null and loginId != ''">
+        OR `meb`.`login_id` = #{loginId}
+      </if>
+      <if test="nickName != null and nickName != ''">
+        OR `meb`.`nick_name` = #{nickName}
+      </if>
+    </trim>
+  </select>
+
+  <select id="getOne" resultType="com.mr.mr_api.user.entity.user.UserOneEnt">
+  <!-- getOne -->
+    SELECT 
+      `meb`.`id`
+      ,`meb`.`login_id`
+      ,`meb`.`role_cd`
+      ,`meb`.`nick_name`
+      ,`meb`.`email`
+      ,`meb`.`status_cd`
+      ,`meb`.`auth_key`
+      ,`meb`.`create_tms`
+      ,`meb`.`approval_tms`
+      ,`meb`.`modify_tms`
+    FROM
+      tb_member_bas `meb`
+    <trim prefix="WHERE" prefixOverrides="AND">
+      <if test="roleCd != null and roleCd != ''">
+        `meb`.`role_cd` = #{roleCd}
+      </if>
+      <if test="email != null and email != ''">
+        AND `meb`.`email` = #{email}
+      </if>
+      <if test="loginId != null and loginId != ''">
+        AND `meb`.`login_id` = #{loginId}
+      </if>
+      <if test="nickName != null and nickName != ''">
+        AND `meb`.`nick_name` = #{nickName}
+      </if>
+      <if test="authKey != null and authKey != ''">
+        AND `meb`.`auth_key` = #{authKey}
+      </if>
+      <if test="statusCd != null and statusCd != ''">
+        AND `meb`.`status_cd` = #{statusCd}
+      </if>
+    </trim>
+  </select>
+
+  <insert id="signup">
+  <!-- signup -->
+    INSERT INTO tb_member_bas 
+    (
+      role_cd
+      ,login_id
+      ,nick_name
+      ,passwd
+      ,email
+      ,status_cd
+      ,auth_key
+      ,create_tms
+    )
+    VALUES
+    (
+      #{roleCd}
+      ,#{loginId}
+      ,#{nickName}
+      ,#{passwd}
+      ,#{email}
+      ,#{statusCd}
+      ,#{authKey}
+      ,NOW()
+    )
+  </insert>
+
+  <update id="updateSignupAuth">
+  <!-- updateSignupAuth -->
+    UPDATE tb_member_bas SET
+      auth_key = null
+      ,status_cd = #{statusCd}
+      ,approval_tms = NOW()
+    WHERE
+      login_id = #{loginId}
+  </update>
+
+  <update id="updateReqAuthPasswd">
+  <!-- updateReqAuthPasswd -->
+    UPDATE tb_member_bas SET
+      auth_key = #{authKey}
+      ,status_cd = #{statusCd}
+    WHERE
+      login_id = #{loginId}
+      AND email = #{email}
+  </update>
+
+  <update id="updatePasswd">
+  <!-- updatePasswd -->
+    UPDATE tb_member_bas SET
+      auth_key = null
+      ,passwd = #{passwd}
+      ,status_cd = #{statusCd}
+      ,modify_tms = NOW()
+    WHERE
+      login_id = #{loginId}
+      AND email = #{email}
+  </update>
+
+  <delete id="deleteByStatusCd">
+    DELETE FROM tb_member_bas
+    WHERE
+      role_cd = #{roleCd}
+      AND status_cd = #{statusCd}
+  </delete>
+  
+</mapper>

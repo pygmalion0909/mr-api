@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mr.mr_api.user.repository.StoreBasRepository">
+
+	<select id="getListOfInfo" resultType="com.mr.mr_api.user.dto.store.StoreListDto">
+	/** getListOfInfo **/
+		SELECT
+			`s1`.*
+		FROM
+		(
+			SELECT 
+				`sto`.`id`
+				,`sto`.`user_id`
+				,`sto`.`name`
+				,`sto`.`address`
+				,`sto`.`area_si_cd`
+				,`sto`.`area_gu_cd`
+				,`sto`.`number`
+				,`sto`.`sector_cd`
+				,`sto`.`create_dt`
+				,`sto`.`modify_dt`
+				,`bad`.`cd` AS badge_cd
+				,(SELECT `fil`.`save_name` FROM tb_file `fil` WHERE `sto`.id = `fil`.`ref_id` AND `fil`.`group` = "STORE") AS img_url
+				,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `cod`.`cd` = `sto`.`sector_cd` AND `cod`.`group` = "STORE") AS sector_name
+			FROM 
+				tb_store_bas `sto`
+			LEFT JOIN tb_badge `bad` ON `bad`.store_id = `sto`.`id`
+			<where>
+				<if test="search != null and search != ''">
+					(
+						`sto`.`name` LIKE CONCAT('%', #{search}, '%') 
+						OR `sto`.`address` LIKE CONCAT('%', #{search}, '%')
+						OR `sto`.`number` LIKE CONCAT('%', #{search}, '%')
+					)
+				</if>
+				<if test="sectorCd != null and sectorCd != ''">
+					AND `sto`.`sector_cd` = #{sectorCd}
+				</if>
+			</where>
+		)`s1`
+		<where>
+			<if test="badgeCd != null and badgeCd != ''">
+				`s1`.`badge_cd` IN 
+				<foreach collection="badgeCd" item="item" open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="areaSiCd != null and areaSiCd != ''">
+				AND `s1`.`area_si_cd` = #{areaSi}
+			</if>
+			<if test="areaGuCd != null and areaGuCd != ''">
+				AND `s1`.`area_gu_cd` IN 
+				<foreach collection="areaGuCd" item="item" open="(" separator="," close=")">#{item}</foreach>
+			</if>
+		</where>
+		GROUP BY `s1`.`id`
+	</select>
+
+	<select id="getTotal" resultType="int">
+	/** getTotal **/
+		SELECT
+			COUNT(`s2`.`id`)
+		FROM (
+			SELECT
+				`s1`.*
+			FROM
+			(
+				SELECT 
+					`sto`.`id`
+					,`sto`.`user_id`
+					,`sto`.`name`
+					,`sto`.`address`
+					,`sto`.`area_si_cd`
+					,`sto`.`area_gu_cd`
+					,`sto`.`number`
+					,`sto`.`sector_cd`
+					,`sto`.`create_dt`
+					,`sto`.`modify_dt`
+					,`bad`.`cd` AS badge_cd
+					,(SELECT `fil`.`save_name` FROM tb_file `fil` WHERE `sto`.id = `fil`.`ref_id` AND `fil`.`group` = "STORE") AS img_url
+					,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `cod`.`cd` = `sto`.`sector_cd` AND `cod`.`group` = "STORE") AS sector_name
+				FROM 
+					tb_store_bas `sto`
+				LEFT JOIN tb_badge `bad` ON `bad`.store_id = `sto`.`id`
+				<where>
+					<if test="search != null and search != ''">
+						(
+							`sto`.`name` LIKE CONCAT('%', #{search}, '%') 
+							OR `sto`.`address` LIKE CONCAT('%', #{search}, '%')
+							OR `sto`.`number` LIKE CONCAT('%', #{search}, '%')
+						)
+					</if>
+					<if test="sectorCd != null and sectorCd != ''">
+						AND `sto`.`sector_cd` = #{sectorCd}
+					</if>
+				</where>
+			)`s1`
+			<where>
+				<if test="badgeCd != null and badgeCd != ''">
+					`s1`.`badge_cd` IN 
+					<foreach collection="badgeCd" item="item" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+				<if test="areaSiCd != null and areaSiCd != ''">
+					AND `s1`.`area_si_cd` = #{areaSi}
+				</if>
+				<if test="areaGuCd != null and areaGuCd != ''">
+					AND `s1`.`area_gu_cd` IN 
+					<foreach collection="areaGuCd" item="item" open="(" separator="," close=")">#{item}</foreach>
+				</if>
+			</where>
+			GROUP BY `s1`.`id`
+		)`s2`
+	</select>
+
+	<select id="getOne" resultType="com.mr.mr_api.user.dto.store.StoreOneDto">
+	/** getOne **/
+		SELECT 
+			`bas`.`id`
+			,`bas`.`user_id`
+			,`bas`.`name`
+			,`bas`.`address`
+			,`bas`.`number`
+			,`bas`.`create_dt`
+			,`bas`.`modify_dt`
+			,`bas`.`delete_dt`
+			,`bas`.`wd_rsv_cycle_cd`
+			,`bas`.`we_rsv_cycle_cd`
+			,`bas`.`area_si_cd`
+			,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `bas`.`area_si_cd` = `cod`.`cd`) AS area_si_name
+			,`bas`.`area_gu_cd`
+			,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `bas`.`area_gu_cd` = `cod`.`cd`) AS area_gu_name
+			,`bas`.`sector_cd`
+			,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `bas`.`sector_cd` = `cod`.`cd`) AS sector_name
+			,`bas`.`wd_st_wk_tm`
+			,`bas`.`wd_ed_wk_tm`
+			,`bas`.`we_st_wk_tm`
+			,`bas`.`we_ed_wk_tm`
+		FROM 
+			tb_store_bas `bas`
+		WHERE
+			`bas`.id = #{storeId}
+	</select>
+
+</mapper>
