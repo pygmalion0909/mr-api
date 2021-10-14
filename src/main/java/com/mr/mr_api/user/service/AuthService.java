@@ -160,6 +160,9 @@ public class AuthService {
     UserOneSvc userOneSvc = mpr.map(reAuthKeyCnt, UserOneSvc.class);
     UserOneEnt user = memberRepository.getOne(userOneSvc);
     if(user == null) return resHandler.err(ResCd.NOT_MEMBER, HttpStatus.BAD_REQUEST);
+    if(!user.getStatusCd().equals(Const.STATUS_CD_A.val) && !user.getStatusCd().equals(Const.STATUS_CD_P.val)) {
+      return resHandler.err(ResCd.NOT_MEMBER, HttpStatus.BAD_REQUEST);
+    }
 
     // create uuid(auth key)
     String authKey = uuidProvider.create();
@@ -180,6 +183,9 @@ public class AuthService {
     mailSendSvc.setNickName(user.getNickName());
     mailSendSvc.setAuthKey(authKey);
     mailProvider.send(mailSendSvc);
+
+    // update user auth key
+    memberRepository.updateAuthKey(reAuthKeyCnt.getLoginId(), authKey);
 
     log.info("Log : Re Dispatch Auth Key Successful");
     return resHandler.ok(HttpStatus.OK);
@@ -207,7 +213,7 @@ public class AuthService {
   }
 
   @Transactional
-  public ResponseEntity<ResEnt> searchPaswwd(SearchPasswdCnt searchPasswdCnt) throws MessagingException {
+  public ResponseEntity<ResEnt> searchPasswd(SearchPasswdCnt searchPasswdCnt) throws MessagingException {
     
     // search user
     UserOneSvc userOneSvc = mpr.map(searchPasswdCnt, UserOneSvc.class);
@@ -226,7 +232,7 @@ public class AuthService {
     mail.setAuthKey(authKey);
     mailProvider.send(mail);
 
-    // update user statusCd (P) & auth-key
+    // update user statusCd (P) & auth key
     ReqAuthPasswdSvc reqAuthPasswdSvc = mpr.map(searchPasswdCnt, ReqAuthPasswdSvc.class);
     reqAuthPasswdSvc.setAuthKey(authKey);
     reqAuthPasswdSvc.setStatusCd(Const.STATUS_CD_P.val);

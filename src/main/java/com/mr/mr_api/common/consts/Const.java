@@ -2,13 +2,19 @@ package com.mr.mr_api.common.consts;
 
 public enum Const {
 
-    BADGE_GU("BADGE") // 배지그룹
-  , ST_BAS_IMG_GU("STBAS") // 상점기본이미지그룹
+    GROUP_BADGE("BADGE") // 배지 그룹명
+  , GROUP_BADGE_BG("BADGEBG") // 배지색상 그룹명
+  , GROUP_STO_BAS_IMG("STBAS") // 상점기본이미지 그룹명
+  , GROUP_AREA_GU("AREAGU") // 지역(구, 군) 그룹명
+  , GROUP_SECTOR("SECTOR") // 가게 업종 그룹명
+  , GROUP_SUBSECTOR("SUBSECTOR") // 가게 서브업종 그룹명
   , STATUS_CD_Y("Y") // yes
   , STATUS_CD_N("N") // no
-  , STATUS_CD_A("A") // 인증진행중
+  , STATUS_CD_A("A") // 인증 진행중
   , STATUS_CD_P("P") // 비밀번호 찾기 요청
-  , CODE_G_DAY("DAY") // 코드그룹요일
+  , CODE_G_DAY("DAY") // 코드그룹(요일)
+  , CODE_G_SI("AREASI") // 코드그룹(지역(시))
+  , CODE_G_GU("AREAGU") // 코드그룹(지역(구, 군))
   , ROLE_USER("ROLE_USER") // 역할 일반회원
   , ROLE_CEO("ROLE_CEO") // 역할 사장님
   , ROLE_MASTER("ROLE_MASTER") // 역할 관리자

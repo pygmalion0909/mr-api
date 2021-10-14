@@ -4,7 +4,6 @@
 <mapper namespace="com.mr.mr_api.user.repository.MemberRepository">
   
   <select id="getOneOfSecret" resultType="com.mr.mr_api.user.entity.user.UserSecretEnt">
-  <!-- getOneOfSecret -->
     SELECT 
       `meb`.`id`
       ,`meb`.`login_id`
@@ -27,7 +26,6 @@
   </select>
 
   <select id="getCountOfDupl" resultType="int">
-  <!-- getCountOfDupl -->
     SELECT 
       COUNT(`meb`.`id`)
     FROM
@@ -47,7 +45,6 @@
   </select>
 
   <select id="getOne" resultType="com.mr.mr_api.user.entity.user.UserOneEnt">
-  <!-- getOne -->
     SELECT 
       `meb`.`id`
       ,`meb`.`login_id`
@@ -84,7 +81,6 @@
   </select>
 
   <insert id="signup">
-  <!-- signup -->
     INSERT INTO tb_member_bas 
     (
       role_cd
@@ -110,7 +106,6 @@
   </insert>
 
   <update id="updateSignupAuth">
-  <!-- updateSignupAuth -->
     UPDATE tb_member_bas SET
       auth_key = null
       ,status_cd = #{statusCd}
@@ -120,7 +115,6 @@
   </update>
 
   <update id="updateReqAuthPasswd">
-  <!-- updateReqAuthPasswd -->
     UPDATE tb_member_bas SET
       auth_key = #{authKey}
       ,status_cd = #{statusCd}
@@ -130,7 +124,6 @@
   </update>
 
   <update id="updatePasswd">
-  <!-- updatePasswd -->
     UPDATE tb_member_bas SET
       auth_key = null
       ,passwd = #{passwd}
@@ -139,6 +132,13 @@
     WHERE
       login_id = #{loginId}
       AND email = #{email}
+  </update>
+
+  <update id="updateAuthKey">
+    UPDATE tb_member_bas SET
+      auth_key = #{authKey}
+    WHERE
+      login_id = #{loginId}
   </update>
 
   <delete id="deleteByStatusCd">

@@ -32,11 +32,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
-
 @RestController
 @RequestMapping("/api/v1/users/auths")
-@Slf4j
 public class AuthContorller {
 
   @Autowired
@@ -63,7 +60,7 @@ public class AuthContorller {
   /**
    * @TITLE 회원가입 인증처리
    */
-  @PostMapping("/signup/certification")
+  @PutMapping("/signup/certification")
   public ResponseEntity<ResEnt> signupCertification(@Valid @RequestBody SignupAuthCnt signupAuthCnt) {
     return authService.signupCertification(signupAuthCnt);
   }
@@ -71,7 +68,7 @@ public class AuthContorller {
   /**
    * @TITLE 인증키 재요청
    */
-  @PostMapping("/re-dispatch/auth-key")
+  @PutMapping("/re-dispatch/auth-key")
   public ResponseEntity<ResEnt> reDispatchAuthKey(@Valid @RequestBody ReAuthKeyCnt reAuthKeyCnt) 
   throws MessagingException {
     
@@ -101,10 +98,10 @@ public class AuthContorller {
   /**
    * @TITLE 비밀번호 찾기(인증메일)
    */
-  @PostMapping("/search/passwd")
+  @PutMapping("/search/passwd")
   public ResponseEntity<ResEnt> searchPasswd(@Valid @RequestBody SearchPasswdCnt searchPasswdCnt)
   throws MessagingException {
-    return authService.searchPaswwd(searchPasswdCnt);
+    return authService.searchPasswd(searchPasswdCnt);
   }
 
   /**

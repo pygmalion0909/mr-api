@@ -21,6 +21,7 @@ public interface MemberRepository {
   public void updateSignupAuth(@Param("loginId") String loginId, @Param("statusCd") String statusCd);
   public void updateReqAuthPasswd(ReqAuthPasswdSvc reqAuthPasswdSvc);
   public void updatePasswd(UpdatePasswdSvc updatePasswdSvc);
+  public void updateAuthKey(@Param("loginId") String loginId, @Param("authKey") String authKey);
   public void deleteByStatusCd(@Param("statusCd") String statusCd, @Param("roleCd") String roleCd);
 
 }

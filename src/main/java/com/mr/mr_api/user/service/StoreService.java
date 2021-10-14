@@ -8,25 +8,27 @@ import com.mr.mr_api.common.consts.Const;
 import com.mr.mr_api.common.consts.ResCd;
 import com.mr.mr_api.common.entity.ResEnt;
 import com.mr.mr_api.common.handler.ResHandler;
+import com.mr.mr_api.user.dto.code.CodeListSvc;
 import com.mr.mr_api.user.dto.file.FileDto;
 import com.mr.mr_api.user.dto.store.StoreBasDto;
 import com.mr.mr_api.user.dto.store.StoreListDto;
 import com.mr.mr_api.user.dto.store.StoreOneDto;
+import com.mr.mr_api.user.dto.store.SubSectorListCnt;
 import com.mr.mr_api.user.repository.BadgeRepository;
+import com.mr.mr_api.user.repository.CodeRepository;
 import com.mr.mr_api.user.repository.FileRepository;
 import com.mr.mr_api.user.repository.StoreBasRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class StoreService {
-  
-  private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
   StoreBasRepository storeBasRepository;
@@ -34,6 +36,8 @@ public class StoreService {
   BadgeRepository badgeRepository;
   @Autowired
   FileRepository fileRepository;
+  @Autowired
+  CodeRepository codeRepository;
   @Autowired
   ResHandler resHandler;
 
@@ -70,7 +74,7 @@ public class StoreService {
     // set file value
     FileDto fileDto = new FileDto();
     fileDto.setRefId(storeId);
-    fileDto.setGroup(Const.ST_BAS_IMG_GU.val);
+    fileDto.setGroup(Const.GROUP_STO_BAS_IMG.val);
 
     List<FileDto> fileList = fileRepository.getList(fileDto);
     
@@ -83,6 +87,29 @@ public class StoreService {
     // set res
     Map<String, Object> result = new HashMap<>();
     result.put("list", fileList);
+    return resHandler.ok(result, HttpStatus.OK);
+  }
+
+  public ResponseEntity<ResEnt> getSectorList() {
+    
+    // set group
+    CodeListSvc codeListSvc = new CodeListSvc();
+    codeListSvc.setGroup(Const.GROUP_SECTOR.val);
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("list", codeRepository.getList(codeListSvc));
+    return resHandler.ok(result, HttpStatus.OK);
+  }
+
+  public ResponseEntity<ResEnt> getSubSectorList(SubSectorListCnt subSectorListCnt) {
+    
+    // set refId
+    CodeListSvc codeListSvc = new CodeListSvc();
+    codeListSvc.setRefId(subSectorListCnt.getId());
+    codeListSvc.setGroup(Const.GROUP_SUBSECTOR.val);
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("list", codeRepository.getList(codeListSvc));
     return resHandler.ok(result, HttpStatus.OK);
   }
 

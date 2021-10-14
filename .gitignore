@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### yml ###
-application.yml
+*.yml
 
 ### api-tester ###
 api-tester/*

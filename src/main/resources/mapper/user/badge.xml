@@ -3,8 +3,30 @@
 
 <mapper namespace="com.mr.mr_api.user.repository.BadgeRepository">
 
+  <select id="getList" resultType="com.mr.mr_api.user.entity.badge.BadgeListEnt">
+  <!-- getList -->
+    SELECT
+      `sq1`.`cd`
+      ,`sq1`.`name`
+      ,`cod`.`name` AS `color`
+    FROM
+    (
+      SELECT
+        `cod`.`id`
+        ,`cod`.`group`
+        ,`cod`.`cd`
+        ,`cod`.`name`
+      FROM tb_code `cod`
+      WHERE
+        `cod`.`group` = #{badgeCd}
+    )`sq1`
+    LEFT JOIN tb_code `cod` ON `sq1`.`id` = `cod`.`ref_id`
+    WHERE
+      `cod`.`group` = #{colorCd}
+  </select>
+
 	<select id="getListOfInfo" resultType="com.mr.mr_api.user.dto.badge.BadgeInfoDto">
-	/** getListOfInfo **/
+	<!-- getListOfInfo -->
     SELECT
       `bad`.`id`
       ,`bad`.`store_id`

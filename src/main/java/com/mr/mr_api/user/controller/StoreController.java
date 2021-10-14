@@ -1,17 +1,16 @@
 package com.mr.mr_api.user.controller;
 
+import javax.validation.Valid;
+
 import com.mr.mr_api.common.entity.ResEnt;
 import com.mr.mr_api.user.dto.store.StoreBasDto;
+import com.mr.mr_api.user.dto.store.SubSectorListCnt;
 import com.mr.mr_api.user.service.StoreService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,8 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/users/stores")
 public class StoreController {
-
-  private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
   StoreService storeService;
@@ -58,21 +55,19 @@ public class StoreController {
   }
 
   /**
-   * @title 가게 등록
+   * @TITLE 가게 업종 리스트 조회
    */
-  @PostMapping("/")
-  public void registerStore() {
-
+  @GetMapping("/sectors")
+  public ResponseEntity<ResEnt> getSectorList() {
+    return storeService.getSectorList();
   }
 
   /**
-   * @title 가게 수정
-   * 정보변경(가게 정보변경)
-   * 가게 삭제(상태값 변경) 진짜 삭제는 bacth돌려서
+   * @TITLE 가게 서브 업종 리스트 조회
    */
-  @PutMapping("/{storeId}")
-  public void updateStore() {
-
+  @GetMapping("/sub-sectors")
+  public ResponseEntity<ResEnt> getSubSectorList(@Valid SubSectorListCnt subSectorListCnt) {
+    return storeService.getSubSectorList(subSectorListCnt);
   }
 
 }

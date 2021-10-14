@@ -3,8 +3,7 @@
 
 <mapper namespace="com.mr.mr_api.user.repository.CodeRepository">
 
-	<select id="getList" resultType="com.mr.mr_api.user.dto.code.CodeDto">
-	/** getList **/
+	<select id="getList" resultType="com.mr.mr_api.user.entity.code.CodeListEnt">
     SELECT
       `cod`.`id`
       ,`cod`.`cd`

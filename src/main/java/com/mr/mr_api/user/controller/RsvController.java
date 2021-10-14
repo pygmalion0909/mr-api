@@ -1,6 +1,5 @@
 package com.mr.mr_api.user.controller;
 
-import java.security.Principal;
 import java.text.ParseException;
 
 import javax.validation.Valid;
@@ -15,7 +14,6 @@ import com.mr.mr_api.user.dto.rsv.RsvTimeListCnt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
