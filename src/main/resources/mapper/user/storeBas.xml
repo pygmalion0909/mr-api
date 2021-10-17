@@ -3,8 +3,7 @@
 
 <mapper namespace="com.mr.mr_api.user.repository.StoreBasRepository">
 
-	<select id="getListOfInfo" resultType="com.mr.mr_api.user.dto.store.StoreListDto">
-	/** getListOfInfo **/
+	<select id="getListOfInfo" resultType="com.mr.mr_api.user.entity.store.StoreListEnt">
 		SELECT
 			`s1`.*
 		FROM
@@ -21,8 +20,8 @@
 				,`sto`.`create_dt`
 				,`sto`.`modify_dt`
 				,`bad`.`cd` AS badge_cd
-				,(SELECT `fil`.`save_name` FROM tb_file `fil` WHERE `sto`.id = `fil`.`ref_id` AND `fil`.`group` = "STORE") AS img_url
-				,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `cod`.`cd` = `sto`.`sector_cd` AND `cod`.`group` = "STORE") AS sector_name
+				,(SELECT `fil`.`save_name` FROM tb_file `fil` WHERE `sto`.id = `fil`.`ref_id` AND `fil`.`group` = #{imgGroup}) AS img_url
+				,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `cod`.`cd` = `sto`.`sector_cd` AND `cod`.`group` = #{sectorGroup}) AS sector_name
 			FROM 
 				tb_store_bas `sto`
 			LEFT JOIN tb_badge `bad` ON `bad`.store_id = `sto`.`id`
@@ -37,15 +36,18 @@
 				<if test="sectorCd != null and sectorCd != ''">
 					AND `sto`.`sector_cd` = #{sectorCd}
 				</if>
+				<if test="subSectorCd != null and subSectorCd != ''">
+					AND `sto`.`sub_sector_cd` = #{subSectorCd}
+				</if>
 			</where>
 		)`s1`
 		<where>
 			<if test="badgeCd != null and badgeCd != ''">
-				`s1`.`badge_cd` IN 
+				`s1`.`badge_cd` IN
 				<foreach collection="badgeCd" item="item" open="(" separator="," close=")">#{item}</foreach>
 			</if>
 			<if test="areaSiCd != null and areaSiCd != ''">
-				AND `s1`.`area_si_cd` = #{areaSi}
+				AND `s1`.`area_si_cd` = #{areaSiCd}
 			</if>
 			<if test="areaGuCd != null and areaGuCd != ''">
 				AND `s1`.`area_gu_cd` IN 
@@ -53,10 +55,10 @@
 			</if>
 		</where>
 		GROUP BY `s1`.`id`
+		LIMIT #{limit} OFFSET #{offset}
 	</select>
 
 	<select id="getTotal" resultType="int">
-	/** getTotal **/
 		SELECT
 			COUNT(`s2`.`id`)
 		FROM (
@@ -76,8 +78,8 @@
 					,`sto`.`create_dt`
 					,`sto`.`modify_dt`
 					,`bad`.`cd` AS badge_cd
-					,(SELECT `fil`.`save_name` FROM tb_file `fil` WHERE `sto`.id = `fil`.`ref_id` AND `fil`.`group` = "STORE") AS img_url
-					,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `cod`.`cd` = `sto`.`sector_cd` AND `cod`.`group` = "STORE") AS sector_name
+					,(SELECT `fil`.`save_name` FROM tb_file `fil` WHERE `sto`.id = `fil`.`ref_id` AND `fil`.`group` = #{imgGroup}) AS img_url
+					,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `cod`.`cd` = `sto`.`sector_cd` AND `cod`.`group` = #{sectorGroup}) AS sector_name
 				FROM 
 					tb_store_bas `sto`
 				LEFT JOIN tb_badge `bad` ON `bad`.store_id = `sto`.`id`
@@ -92,6 +94,9 @@
 					<if test="sectorCd != null and sectorCd != ''">
 						AND `sto`.`sector_cd` = #{sectorCd}
 					</if>
+					<if test="subSectorCd != null and subSectorCd != ''">
+						AND `sto`.`sub_sector_cd` = #{subSectorCd}
+					</if>
 				</where>
 			)`s1`
 			<where>
@@ -100,7 +105,7 @@
 					<foreach collection="badgeCd" item="item" open="(" separator="," close=")">#{item}</foreach>
 				</if>
 				<if test="areaSiCd != null and areaSiCd != ''">
-					AND `s1`.`area_si_cd` = #{areaSi}
+					AND `s1`.`area_si_cd` = #{areaSiCd}
 				</if>
 				<if test="areaGuCd != null and areaGuCd != ''">
 					AND `s1`.`area_gu_cd` IN 

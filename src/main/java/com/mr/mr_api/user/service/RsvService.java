@@ -112,7 +112,7 @@ public class RsvService {
     }
 
     // 3. set break day list
-    List<StoreBreakDayEnt> bkDayList = storeRsvDayRepository.getListOfBreakDay(Const.CODE_G_DAY.val);
+    List<StoreBreakDayEnt> bkDayList = storeRsvDayRepository.getListOfBreakDay(Const.CD_G_DAY.val);
     if(bkDayList.size() > 0) {
       result.put("dayList", bkDayList);
     }else{

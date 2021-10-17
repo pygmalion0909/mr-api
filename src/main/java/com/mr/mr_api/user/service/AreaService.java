@@ -30,7 +30,7 @@ public class AreaService {
 
     // set group
     CodeListSvc codeListSvc = new CodeListSvc();
-    codeListSvc.setGroup(Const.CODE_G_SI.val);
+    codeListSvc.setGroup(Const.CD_G_SI.val);
 
     Map<String, Object> result = new HashMap<>();
     result.put("list", codeRepository.getList(codeListSvc));
@@ -42,7 +42,7 @@ public class AreaService {
     // set refId
     CodeListSvc codeListSvc = new CodeListSvc();
     codeListSvc.setRefId(areaGuListCnt.getId());
-    codeListSvc.setGroup(Const.GROUP_AREA_GU.val);
+    codeListSvc.setGroup(Const.CD_G_GU.val);
 
     Map<String, Object> result = new HashMap<>();
     result.put("list", codeRepository.getList(codeListSvc));

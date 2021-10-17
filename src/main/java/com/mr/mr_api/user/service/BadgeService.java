@@ -28,8 +28,8 @@ public class BadgeService {
   public ResponseEntity<ResEnt> getList() {
     
     BadgeListSvc badgeListSvc = new BadgeListSvc();
-    badgeListSvc.setBadgeCd(Const.GROUP_BADGE.val);
-    badgeListSvc.setColorCd(Const.GROUP_BADGE_BG.val);
+    badgeListSvc.setBadgeCd(Const.CD_G_BADGE.val);
+    badgeListSvc.setColorCd(Const.CD_G_BADGE_BG.val);
 
     Map<String, Object> result = new HashMap<>();
     result.put("list", badgeRepository.getList(badgeListSvc));

@@ -1,4 +1,4 @@
-package com.mr.mr_api.user.dto.store;
+package com.mr.mr_api.user.entity.store;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StoreListDto {
+public class StoreListEnt {
   private String id;
   private String userId;
   private String name;
@@ -18,6 +18,7 @@ public class StoreListDto {
   private String areaGuCd;
   private String number;
   private String sectorCd;
+  private String sectorName;
   private String createDt;
   private String modifyDt;
   private String imgUrl;
