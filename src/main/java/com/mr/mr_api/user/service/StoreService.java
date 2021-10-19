@@ -68,6 +68,7 @@ public class StoreService {
     Map<String, Object> result = new HashMap<>();
     result.put("list", listBas);
     result.put("total", total);
+    log.info("Log : Get Store List Success");
     return resHandler.ok(result, HttpStatus.OK);
   }
   
@@ -78,6 +79,7 @@ public class StoreService {
     // set res
     Map<String, Object> result = new HashMap<>();
     result.put("info", storeOne);
+    log.info("Log : Get Store Bas One Success");
     return resHandler.ok(result, HttpStatus.OK);
   }
 
@@ -100,6 +102,8 @@ public class StoreService {
     // set res
     Map<String, Object> result = new HashMap<>();
     result.put("list", list);
+
+    log.info("Log : Get Store Bas Imgs Success");
     return resHandler.ok(result, HttpStatus.OK);
   }
 
@@ -111,6 +115,8 @@ public class StoreService {
 
     Map<String, Object> result = new HashMap<>();
     result.put("list", codeRepository.getList(codeListSvc));
+
+    log.info("Log : Get Store Sector List Success");
     return resHandler.ok(result, HttpStatus.OK);
   }
 
@@ -123,6 +129,8 @@ public class StoreService {
 
     Map<String, Object> result = new HashMap<>();
     result.put("list", codeRepository.getList(codeListSvc));
+    
+    log.info("Log : Get Store Sub-Sector List Success");
     return resHandler.ok(result, HttpStatus.OK);
   }
 

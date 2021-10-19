@@ -16,7 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class AreaService {
   
   @Autowired
@@ -34,6 +37,7 @@ public class AreaService {
 
     Map<String, Object> result = new HashMap<>();
     result.put("list", codeRepository.getList(codeListSvc));
+    log.info("Log : Get Area(Si) List Success");
     return resHandler.ok(result, HttpStatus.OK);
   }
 
@@ -46,6 +50,7 @@ public class AreaService {
 
     Map<String, Object> result = new HashMap<>();
     result.put("list", codeRepository.getList(codeListSvc));
+    log.info("Log : Get Area(Gu) List Success");
     return resHandler.ok(result, HttpStatus.OK);
   }
 
