@@ -53,4 +53,42 @@
     GROUP BY DATE_FORMAT(`sq1`.`rsv_tms`, "%Y-%m-%d")
   </select>
 
+  <select id="getRsvSumPer" resultType="String">
+    SELECT
+      SUM(`rhb`.`rsv_per`) AS `sum_rsv_per` 
+    FROM tb_rsv_hs_bas `rhb`
+    WHERE
+      `rhb`.`day_cd` = #{dayCd}
+      AND `rhb`.`rsv_tms` = #{rsvTms}
+      AND `rhb`.`store_id` = #{storeId}
+      AND `rhb`.`item_id` = #{itemId}
+      AND `rhb`.`status_cd`= #{statusCd}
+    GROUP BY `rhb`.`rsv_tms`
+  </select>
+
+  <insert id="register">
+    INSERT INTO tb_rsv_hs_bas
+    (
+      store_id
+      ,user_id
+      ,item_id
+      ,rsv_tms
+      ,day_cd
+      ,rsv_per
+      ,status_cd
+      ,create_tms
+    )
+    VALUES
+    (
+      #{storeId}
+      ,#{userId}
+      ,#{itemId}
+      ,#{rsvTms}
+      ,#{dayCd}
+      ,#{rsvPer}
+      ,#{statusCd}
+      ,NOW()
+    )
+  </insert>
+
 </mapper>

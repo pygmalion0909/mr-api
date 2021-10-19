@@ -24,7 +24,7 @@
       `cod`.`group` = #{colorCd}
   </select>
 
-	<select id="getListOfInfo" resultType="com.mr.mr_api.user.dto.badge.BadgeInfoDto">
+	<select id="getListOfInfo" resultType="com.mr.mr_api.user.entity.badge.BadgeInfoEnt">
     SELECT
       `bad`.`id`
       ,`bad`.`store_id`

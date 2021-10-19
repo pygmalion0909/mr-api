@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mr.mr_api.user.repository.StoreRsvItemRepository">
+  
+	<select id="getOne" resultType="com.mr.mr_api.user.entity.item.StoreRsvItemEnt">
+		SELECT 
+			`sri`.`store_rsv_day_id`
+			,`sri`.`item_id`
+			,`sri`.`create_tms`
+			,`srd`.`id`
+			,`srd`.`store_id`
+			,`srd`.`day_cd`
+		FROM tc_store_rsv_item `sri`
+		LEFT JOIN tb_store_rsv_day `srd` ON `sri`.`store_rsv_day_id` = `srd`.`id`
+		WHERE
+			`sri`.`item_id` = #{itemId}
+			<if test="storeId != null and storeId != ''">
+				AND `srd`.`store_id` = #{storeId}
+			</if>
+			<if test="dayCd != null and dayCd != ''">
+				AND `srd`.`day_cd` = #{dayCd}
+			</if>
+	</select>
+
+</mapper>

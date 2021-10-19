@@ -2,7 +2,7 @@ package com.mr.mr_api.user.entity.store;
 
 import java.util.List;
 
-import com.mr.mr_api.user.dto.badge.BadgeInfoDto;
+import com.mr.mr_api.user.entity.badge.BadgeInfoEnt;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +19,10 @@ public class StoreListEnt {
   private String number;
   private String sectorCd;
   private String sectorName;
+  private String subSectorCd;
+  private String subSectorName;
   private String createDt;
   private String modifyDt;
   private String imgUrl;
-  private List<BadgeInfoDto> badgeList;
+  private List<BadgeInfoEnt> badgeList;
 }

@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 
-import com.mr.mr_api.common.consts.Const;
 import com.mr.mr_api.common.consts.ResCd;
 import com.mr.mr_api.common.entity.ResEnt;
 
@@ -32,15 +31,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mr.mr_api.common.entity.ResEnt;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.stereotype.Component;
 
 @RestControllerAdvice
 public class MrExceptionHandler implements AccessDeniedHandler, AuthenticationEntryPoint {

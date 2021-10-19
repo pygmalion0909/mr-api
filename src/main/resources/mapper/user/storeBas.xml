@@ -17,11 +17,13 @@
 				,`sto`.`area_gu_cd`
 				,`sto`.`number`
 				,`sto`.`sector_cd`
+				,`sto`.`sub_sector_cd`
 				,`sto`.`create_dt`
 				,`sto`.`modify_dt`
 				,`bad`.`cd` AS badge_cd
 				,(SELECT `fil`.`save_name` FROM tb_file `fil` WHERE `sto`.id = `fil`.`ref_id` AND `fil`.`group` = #{imgGroup}) AS img_url
 				,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `cod`.`cd` = `sto`.`sector_cd` AND `cod`.`group` = #{sectorGroup}) AS sector_name
+				,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `cod`.`cd` = `sto`.`sub_sector_cd` AND `cod`.`group` = #{subSectorGroup}) AS sub_sector_name
 			FROM 
 				tb_store_bas `sto`
 			LEFT JOIN tb_badge `bad` ON `bad`.store_id = `sto`.`id`
@@ -116,8 +118,7 @@
 		)`s2`
 	</select>
 
-	<select id="getOne" resultType="com.mr.mr_api.user.dto.store.StoreOneDto">
-	/** getOne **/
+	<select id="getOne" resultType="com.mr.mr_api.user.entity.store.StoreOneEnt">
 		SELECT 
 			`bas`.`id`
 			,`bas`.`user_id`
@@ -127,14 +128,14 @@
 			,`bas`.`create_dt`
 			,`bas`.`modify_dt`
 			,`bas`.`delete_dt`
-			,`bas`.`wd_rsv_cycle_cd`
-			,`bas`.`we_rsv_cycle_cd`
 			,`bas`.`area_si_cd`
 			,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `bas`.`area_si_cd` = `cod`.`cd`) AS area_si_name
 			,`bas`.`area_gu_cd`
 			,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `bas`.`area_gu_cd` = `cod`.`cd`) AS area_gu_name
 			,`bas`.`sector_cd`
 			,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `bas`.`sector_cd` = `cod`.`cd`) AS sector_name
+			,`bas`.`sub_sector_cd`
+			,(SELECT `cod`.`name` FROM tb_code `cod` WHERE `bas`.`sub_sector_cd` = `cod`.`cd`) AS sub_sector_name
 			,`bas`.`wd_st_wk_tm`
 			,`bas`.`wd_ed_wk_tm`
 			,`bas`.`we_st_wk_tm`

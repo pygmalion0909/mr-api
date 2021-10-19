@@ -3,8 +3,7 @@
 
 <mapper namespace="com.mr.mr_api.user.repository.FileRepository">
 
-	<select id="getList" resultType="com.mr.mr_api.user.dto.file.FileDto">
-	/** getList **/
+	<select id="getList" resultType="com.mr.mr_api.user.entity.file.FileEnt">
 		SELECT
 			`fil`.`id`
 			,`fil`.`ref_id`

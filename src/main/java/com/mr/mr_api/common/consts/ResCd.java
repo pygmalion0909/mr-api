@@ -8,6 +8,7 @@ public enum ResCd {
   , NOT_MEMBER("0-04", "Not Found Member")
   , F_MAIL("0-05", "Failed to send Mail")
   , F_AUTH("0-06", "Forbidden")
+  , F_RESERVATION("0-07", "Impossible Reservation")
   ;
 
   public String cd;

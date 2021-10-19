@@ -1,5 +1,6 @@
 package com.mr.mr_api.user.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,13 @@ import com.mr.mr_api.common.consts.ResCd;
 import com.mr.mr_api.common.entity.ResEnt;
 import com.mr.mr_api.common.handler.ResHandler;
 import com.mr.mr_api.user.dto.code.CodeListSvc;
-import com.mr.mr_api.user.dto.file.FileDto;
+import com.mr.mr_api.user.dto.file.FileSvc;
 import com.mr.mr_api.user.dto.store.StoreListCnt;
-import com.mr.mr_api.user.dto.store.StoreOneDto;
 import com.mr.mr_api.user.dto.store.SubSectorListCnt;
+import com.mr.mr_api.user.entity.file.FileEnt;
+import com.mr.mr_api.user.entity.store.StoreBasImgsEnt;
 import com.mr.mr_api.user.entity.store.StoreListEnt;
+import com.mr.mr_api.user.entity.store.StoreOneEnt;
 import com.mr.mr_api.user.repository.BadgeRepository;
 import com.mr.mr_api.user.repository.CodeRepository;
 import com.mr.mr_api.user.repository.FileRepository;
@@ -51,13 +54,13 @@ public class StoreService {
     // get store infos && total
     storeListCnt.setImgGroup(Const.FL_G_STO_MAIN_IMG.val);
     storeListCnt.setSectorGroup(Const.CD_G_SECTOR.val);
+    storeListCnt.setSubSectorGroup(Const.CD_G_SUBSECTOR.val);
     List<StoreListEnt> listBas = storeBasRepository.getListOfInfo(storeListCnt);
     int total = storeBasRepository.getTotal(storeListCnt);
 
     // get badge infos
     for(int i = 0; i < listBas.size(); i++) {
       listBas.get(i).setImgUrl(baseUrl + imgResourcePath + "/" + listBas.get(i).getImgUrl());
-      // TODO dto이름 수정
       listBas.get(i).setBadgeList(badgeRepository.getListOfInfo(listBas.get(i).getId()));
     }
 
@@ -69,7 +72,7 @@ public class StoreService {
   }
   
   public ResponseEntity<ResEnt> getStoreOne(String storeId) {
-    StoreOneDto storeOne = storeBasRepository.getOne(storeId);
+    StoreOneEnt storeOne = storeBasRepository.getOne(storeId);
     if(storeOne == null) return resHandler.err(ResCd.NOT_DATA, HttpStatus.BAD_REQUEST);
 
     // set res
@@ -78,23 +81,25 @@ public class StoreService {
     return resHandler.ok(result, HttpStatus.OK);
   }
 
-  public ResponseEntity<ResEnt> getStoreDetailImg(String storeId) {
+  public ResponseEntity<ResEnt> getStoreBasImgs(String storeId) {
     // set file value
-    FileDto fileDto = new FileDto();
-    fileDto.setRefId(storeId);
-    fileDto.setGroup(Const.FL_G_STO_BAS_IMG.val);
+    FileSvc fileSvc = new FileSvc();
+    fileSvc.setRefId(storeId);
+    fileSvc.setGroup(Const.FL_G_STO_BAS_IMG.val);
 
-    List<FileDto> fileList = fileRepository.getList(fileDto);
+    List<FileEnt> fileList = fileRepository.getList(fileSvc);
     
     // set img url
-    // TODO url주소 환경변수
-    for(FileDto item : fileList) {
-      item.setUrl("http://localhost8080/static/img/store" + item.getSaveName());
+    List<StoreBasImgsEnt> list = new ArrayList<>();
+    StoreBasImgsEnt storeBasImgsEnt = new StoreBasImgsEnt();
+    for(FileEnt item : fileList) {
+      storeBasImgsEnt.setImgUrl(baseUrl + imgResourcePath + "/" + item.getSaveName());
+      list.add(storeBasImgsEnt);
     }
 
     // set res
     Map<String, Object> result = new HashMap<>();
-    result.put("list", fileList);
+    result.put("list", list);
     return resHandler.ok(result, HttpStatus.OK);
   }
 

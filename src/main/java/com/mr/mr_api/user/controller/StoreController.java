@@ -40,9 +40,9 @@ public class StoreController {
   /**
    * @TITLE 가게 상세 이미지 조회
    */
-  @GetMapping("/bas/img/{storeId}")
-  public ResponseEntity<ResEnt> getStoreDetailImg(@PathVariable("storeId") String storeId) {
-    return storeService.getStoreDetailImg(storeId);
+  @GetMapping("/bas/imgs/{storeId}")
+  public ResponseEntity<ResEnt> getStoreBasImgs(@PathVariable("storeId") String storeId) {
+    return storeService.getStoreBasImgs(storeId);
   }
 
   /**

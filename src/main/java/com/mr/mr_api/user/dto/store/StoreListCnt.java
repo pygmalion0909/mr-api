@@ -18,4 +18,5 @@ public class StoreListCnt extends Paging {
   private String[] badgeCd; 
   private String imgGroup;
   private String sectorGroup;
+  private String subSectorGroup;
 }

@@ -3,8 +3,25 @@
 
 <mapper namespace="com.mr.mr_api.user.repository.StoreRsvTimeRepository">
   
+	<select id="getOne" resultType="com.mr.mr_api.user.entity.time.StoreRsvTimeEnt">
+		SELECT 
+			`srt`.`store_rsv_day_id`
+			,`srt`.`rsv_tm`
+			,`srt`.`create_tms`
+			,`srd`.`day_cd`
+		FROM tb_store_rsv_time `srt`
+		LEFT JOIN tb_store_rsv_day `srd` ON `srt`.`store_rsv_day_id` = `srd`.`id`
+		WHERE
+			`srd`.`store_id` = #{storeId}
+			<if test="dayCd != null and dayCd != ''">
+				AND `srd`.`day_cd` = #{dayCd}
+			</if>
+			<if test="rsvTm != null and rsvTm != ''">
+				AND `srt`.`rsv_tm` = #{rsvTm}
+			</if>
+	</select>
+
   <select id="getListOfDay" resultType="com.mr.mr_api.user.entity.time.TimeRsvEnt">
-		/** getListOfItem **/
 		SELECT 
 			`srt`.`store_rsv_day_id`
 			,`srt`.`rsv_tm`

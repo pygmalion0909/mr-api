@@ -1,11 +1,13 @@
-package com.mr.mr_api.user.dto.file;
+package com.mr.mr_api.user.entity.file;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-public class FileDto {
+@ToString
+public class FileEnt {
   private String id;
   private String refId;
   private String group;
@@ -13,7 +15,6 @@ public class FileDto {
   private String saveName;
   private String size;
   private String extension;
-  private String url;
   private String createDt;
   private String modifyDt;
 }

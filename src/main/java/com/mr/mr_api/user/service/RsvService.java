@@ -10,26 +10,36 @@ import java.util.List;
 import java.util.Map;
 
 import com.mr.mr_api.common.consts.Const;
+import com.mr.mr_api.common.consts.ResCd;
 import com.mr.mr_api.common.entity.ResEnt;
 import com.mr.mr_api.common.handler.ResHandler;
 import com.mr.mr_api.user.dto.rsv.RsvItemListCnt;
+import com.mr.mr_api.user.dto.rsv.RsvRegisterCnt;
+import com.mr.mr_api.user.dto.rsv.RsvRegisterSvc;
+import com.mr.mr_api.user.dto.rsv.RsvSumPerSvc;
 import com.mr.mr_api.user.dto.rsv.RsvTimeListCnt;
 import com.mr.mr_api.user.dto.storeBreak.StoreBreakDtSvc;
 import com.mr.mr_api.user.dto.time.StoreRsvDayTimeSvc;
+import com.mr.mr_api.user.dto.time.StoreRsvTimeSvc;
 import com.mr.mr_api.user.entity.day.StoreBreakDayEnt;
+import com.mr.mr_api.user.entity.item.ItemBasEnt;
 import com.mr.mr_api.user.entity.item.ItemRsvEnt;
+import com.mr.mr_api.user.entity.item.StoreRsvItemEnt;
 import com.mr.mr_api.user.entity.rsv.RsvHsBasItemEnt;
 import com.mr.mr_api.user.entity.rsv.RsvHsBasMthEnt;
 import com.mr.mr_api.user.entity.rsv.RsvNoneDtEnt;
 import com.mr.mr_api.user.entity.storeBreak.StoreBreakDtEnt;
+import com.mr.mr_api.user.entity.time.StoreRsvTimeEnt;
 import com.mr.mr_api.user.entity.time.TimeRsvEnt;
 import com.mr.mr_api.user.repository.ItemBasRepository;
 import com.mr.mr_api.user.repository.RsvHsBasRepository;
-import com.mr.mr_api.user.repository.StoreBasRepository;
 import com.mr.mr_api.user.repository.StoreBreakRepository;
 import com.mr.mr_api.user.repository.StoreRsvDayRepository;
+import com.mr.mr_api.user.repository.StoreRsvItemRepository;
 import com.mr.mr_api.user.repository.StoreRsvTimeRepository;
+import com.mr.mr_api.user.dto.item.ItemBasOneSvc;
 import com.mr.mr_api.user.dto.item.ItemRsvSvc;
+import com.mr.mr_api.user.dto.item.StoreRsvItemSvc;
 import com.mr.mr_api.user.dto.rsv.RsvDtListCnt;
 import com.mr.mr_api.user.dto.rsv.RsvHsBasMthSvc;
 import com.mr.mr_api.user.dto.rsv.RsvHsBasSvc;
@@ -41,6 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RsvService {
@@ -56,15 +67,16 @@ public class RsvService {
   @Autowired
   private RsvHsBasRepository rsvHsBasRepository;
   @Autowired
-  private StoreBasRepository storeBasRepository;
-  @Autowired
   private StoreRsvTimeRepository storeRsvTimeRepository;
   @Autowired
   private StoreBreakRepository storeBreakRepository;
   @Autowired
   private StoreRsvDayRepository storeRsvDayRepository;
+  @Autowired
+  private StoreRsvItemRepository storeRsvItemRepository;
 
   public ResponseEntity<ResEnt> getRsvDateList(RsvDtListCnt rsvDtListCnt) throws ParseException {
+
     // set return obj
     Map<String, Object> result = new HashMap<>();
     List<RsvNoneDtEnt> disableDt = new ArrayList<>();
@@ -89,7 +101,6 @@ public class RsvService {
       // get rsv time list of day
       StoreRsvDayTimeSvc storeRsvTimeSvcDto = mpr.map(el, StoreRsvDayTimeSvc.class);
       List<TimeRsvEnt> timeList = storeRsvTimeRepository.getListOfDay(storeRsvTimeSvcDto);
-      log.info("timeList : {}", timeList);
 
       // 상세검증필요대상
       int noneTimeCount = 0;
@@ -124,6 +135,7 @@ public class RsvService {
   }
 
   public ResponseEntity<ResEnt> getRsvTimeList(RsvTimeListCnt rsvTimeListCnt) {
+
     Map<String, Object> result = new HashMap<>();
     
     // get store rsv time list of day
@@ -153,6 +165,7 @@ public class RsvService {
   }
 
   public ResponseEntity<ResEnt> getRsvItemList(RsvItemListCnt rsvItemListCntDto) {
+
     Map<String, Object> result = new HashMap<>();
     
     // get store reservation item list of day
@@ -182,13 +195,53 @@ public class RsvService {
     return resHandler.ok(result, HttpStatus.OK);
   }
 
-  public void registerRsv() {
+  @Transactional
+  public ResponseEntity<ResEnt> registerRsv(RsvRegisterCnt rsvRegisterCnt) {
+
+    // check time, item
+    StoreRsvTimeSvc storeRsvTimeSvc = mpr.map(rsvRegisterCnt, StoreRsvTimeSvc.class); // storeId, dayCd, rsvTm
+    StoreRsvTimeEnt timeRsv = storeRsvTimeRepository.getOne(storeRsvTimeSvc);
+    
+    StoreRsvItemSvc storeRsvItemSvc = mpr.map(rsvRegisterCnt, StoreRsvItemSvc.class); // storeId, dayCd, itemId
+    StoreRsvItemEnt itemRsv = storeRsvItemRepository.getOne(storeRsvItemSvc);
+    
+    if(timeRsv == null || itemRsv == null) return resHandler.err(ResCd.F_RESERVATION, HttpStatus.OK);
+    
+    // check reservation per(from rsv_hs_bas)
+    RsvSumPerSvc rsvSumPerSvc = mpr.map(rsvRegisterCnt, RsvSumPerSvc.class); // rsvTms, dayCd, storeId, itemId, statusCd
+    rsvSumPerSvc.setRsvTms(rsvRegisterCnt.getRsvDt() + " " + rsvRegisterCnt.getRsvTm());
+    rsvSumPerSvc.setStatusCd(Const.STATUS_CD_Y.val);
+    String rsvHsSumPer = rsvHsBasRepository.getRsvSumPer(rsvSumPerSvc);
+
+    // check reservation per
+    if(rsvHsSumPer != null) {
+      // get item_bas의 per_tm
+      ItemBasOneSvc itemBasOneSvc = new ItemBasOneSvc();
+      itemBasOneSvc.setId(rsvRegisterCnt.getItemId());
+      ItemBasEnt itemBasEnt = itemBasRepository.getOne(itemBasOneSvc);
+
+      // case1: 현재 예약한 인원 >= 시간당 예약가능한 인원
+      if(Integer.parseInt(rsvHsSumPer) >= itemBasEnt.getPerTm()) return resHandler.err(ResCd.F_RESERVATION, HttpStatus.OK);
+      // case2: (현재 예약한 인원 + 예약할 인원) > 시간당 예약가능한 인원
+      if((Integer.parseInt(rsvHsSumPer) + rsvRegisterCnt.getRsvPer()) > itemBasEnt.getPerTm()) {
+        return resHandler.err(ResCd.F_RESERVATION, HttpStatus.OK);
+      }
+    }
+
+    // register
+    RsvRegisterSvc rsvRegisterSvc = mpr.map(rsvRegisterCnt, RsvRegisterSvc.class);
+    rsvRegisterSvc.setStatusCd(Const.STATUS_CD_Y.val);
+    rsvRegisterSvc.setRsvTms(rsvRegisterCnt.getRsvDt() + " " + rsvRegisterCnt.getRsvTm());
+    rsvHsBasRepository.register(rsvRegisterSvc);
+    log.info("Log : Store Rsv Register Success");
+    return resHandler.ok(HttpStatus.OK);
   }
 
   /**
    * @TITLE check impossible reservation time and get list
    */
   private List<TimeRsvEnt> getNoneRsvTimeList(ItemRsvSvc itemRsvSvc, List<TimeRsvEnt> timeList, String rsvDt, String dayCd) {
+
     // get store rsv item list of day
     List<ItemRsvEnt> itemList = itemBasRepository.getListOfDay(itemRsvSvc); 
     
