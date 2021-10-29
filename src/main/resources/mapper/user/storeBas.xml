@@ -27,7 +27,7 @@
 			FROM 
 				tb_store_bas `sto`
 			LEFT JOIN tb_badge `bad` ON `bad`.store_id = `sto`.`id`
-			<where>
+			<trim prefix="WHERE" prefixOverrides="AND|OR">
 				<if test="search != null and search != ''">
 					(
 						`sto`.`name` LIKE CONCAT('%', #{search}, '%') 
@@ -41,21 +41,21 @@
 				<if test="subSectorCd != null and subSectorCd != ''">
 					AND `sto`.`sub_sector_cd` = #{subSectorCd}
 				</if>
-			</where>
+			</trim>
 		)`s1`
-		<where>
-			<if test="badgeCd != null and badgeCd != ''">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="badgeCd != null and badgeCd != '' and badgeCd.length > 0">
 				`s1`.`badge_cd` IN
 				<foreach collection="badgeCd" item="item" open="(" separator="," close=")">#{item}</foreach>
 			</if>
 			<if test="areaSiCd != null and areaSiCd != ''">
 				AND `s1`.`area_si_cd` = #{areaSiCd}
 			</if>
-			<if test="areaGuCd != null and areaGuCd != ''">
+			<if test="areaGuCd != null and areaGuCd != '' and areaGuCd.length > 0">
 				AND `s1`.`area_gu_cd` IN 
 				<foreach collection="areaGuCd" item="item" open="(" separator="," close=")">#{item}</foreach>
 			</if>
-		</where>
+		</trim>
 		GROUP BY `s1`.`id`
 		LIMIT #{limit} OFFSET #{offset}
 	</select>
@@ -85,7 +85,7 @@
 				FROM 
 					tb_store_bas `sto`
 				LEFT JOIN tb_badge `bad` ON `bad`.store_id = `sto`.`id`
-				<where>
+				<trim prefix="WHERE" prefixOverrides="AND|OR">
 					<if test="search != null and search != ''">
 						(
 							`sto`.`name` LIKE CONCAT('%', #{search}, '%') 
@@ -99,21 +99,21 @@
 					<if test="subSectorCd != null and subSectorCd != ''">
 						AND `sto`.`sub_sector_cd` = #{subSectorCd}
 					</if>
-				</where>
+				</trim>
 			)`s1`
-			<where>
-				<if test="badgeCd != null and badgeCd != ''">
+			<trim prefix="WHERE" prefixOverrides="AND|OR">
+				<if test="badgeCd != null and badgeCd != '' and badgeCd.length > 0">
 					`s1`.`badge_cd` IN 
 					<foreach collection="badgeCd" item="item" open="(" separator="," close=")">#{item}</foreach>
 				</if>
 				<if test="areaSiCd != null and areaSiCd != ''">
 					AND `s1`.`area_si_cd` = #{areaSiCd}
 				</if>
-				<if test="areaGuCd != null and areaGuCd != ''">
+				<if test="areaGuCd != null and areaGuCd != '' and areaGuCd.length > 0">
 					AND `s1`.`area_gu_cd` IN 
 					<foreach collection="areaGuCd" item="item" open="(" separator="," close=")">#{item}</foreach>
 				</if>
-			</where>
+			</trim>
 			GROUP BY `s1`.`id`
 		)`s2`
 	</select>

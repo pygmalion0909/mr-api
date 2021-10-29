@@ -24,5 +24,4 @@ public class StoreListEnt {
   private String createDt;
   private String modifyDt;
   private String imgUrl;
-  private List<BadgeInfoEnt> badgeList;
 }

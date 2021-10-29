@@ -7,8 +7,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class BadgeListEnt {
+public class BadgeLvEnt {
+  private String storeId;
   private String cd;
+  private int score;
   private String name;
-  private String group;
+  private int level;
 }

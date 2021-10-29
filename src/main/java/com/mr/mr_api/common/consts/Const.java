@@ -2,8 +2,8 @@ package com.mr.mr_api.common.consts;
 
 public enum Const {
 
-    CD_G_BADGE("BADGE") // 코드 배지 그룹명
-  , CD_G_BADGE_BG("BADGEBG") // 코드 배지색상 그룹명
+    CD_G_BADGE("BADGE") // 코드 뱃지 그룹명
+  , CD_G_BADGELV("LVSCORE") // 코드 뱃지 레벨 스코어 그룹명
   , CD_G_SECTOR("SECTOR") // 코드 가게 업종 그룹명
   , CD_G_SUBSECTOR("SUBSECTOR") // 코드 가게 서브업종 그룹명
   , CD_G_DAY("DAY") // 코드 요일 그룹명

@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class Paging {
   private int offset = 0;
-  private int limit = 10;
+  private int limit = 12;
 }

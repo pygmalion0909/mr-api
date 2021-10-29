@@ -58,10 +58,9 @@ public class StoreService {
     List<StoreListEnt> listBas = storeBasRepository.getListOfInfo(storeListCnt);
     int total = storeBasRepository.getTotal(storeListCnt);
 
-    // get badge infos
+    // get img url
     for(int i = 0; i < listBas.size(); i++) {
       listBas.get(i).setImgUrl(baseUrl + imgResourcePath + "/" + listBas.get(i).getImgUrl());
-      listBas.get(i).setBadgeList(badgeRepository.getListOfInfo(listBas.get(i).getId()));
     }
 
     // set res
