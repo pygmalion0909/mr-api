@@ -87,6 +87,15 @@ public class AuthService {
       signinUnAuthEnt.setLoginId(user.getLoginId());
       signinUnAuthEnt.setNickName(user.getNickName());
       signinUnAuthEnt.setEmail(user.getEmail());
+
+      String statusCd = null;
+      if(user.getStatusCd().equals(Const.STATUS_CD_A.val)){
+        statusCd = Const.STATUS_CD_A.val;
+      }else{
+        statusCd = Const.STATUS_CD_P.val;
+      }
+      signinUnAuthEnt.setStatusCd(statusCd);
+
       result.put("info", signinUnAuthEnt);
       result.put("token", null);
       return resHandler.ok(result, HttpStatus.OK);

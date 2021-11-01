@@ -26,6 +26,7 @@ import com.mr.mr_api.user.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -89,8 +90,8 @@ public class AuthContorller {
   /**
    * @TITLE 아이디 찾기
    */
-  @PostMapping("/search/login-id")
-  public ResponseEntity<ResEnt> searchLoginId(@Valid @RequestBody SearchIdCnt searchIdCnt) 
+  @GetMapping("/search/login-id")
+  public ResponseEntity<ResEnt> searchLoginId(@Valid SearchIdCnt searchIdCnt) 
   throws MessagingException {
     return authService.searchLoginId(searchIdCnt);
   }

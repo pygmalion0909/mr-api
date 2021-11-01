@@ -11,4 +11,5 @@ public class SigninUnAuthEnt {
   private String loginId;
   private String nickName;
   private String email;
+  private String statusCd;
 }
