@@ -54,8 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 권한 설정
         .and()
           .authorizeRequests() // http요청에 대한 접근 제한을 설정하겠다는 선언
-          .antMatchers(HttpMethod.POST, "/api/v1/users/reservation").authenticated() // ex:해당경로는 로그인을 요구함
-          .antMatchers(HttpMethod.POST, "/api/v1/users/reservation").hasRole("USER") // 예약등록은 USER만 가능
+          .antMatchers("/api/v1/users/mypage/*").authenticated() // 해당경로는 로그인을 요구함
+          .antMatchers(HttpMethod.POST, "/api/v1/users/reservation").hasRole("USER") // 예약등록은 USER만 가능(POST method방식에 한정)
           // .antMatchers("/api/v1/users/*").permitAll() // ex: user api는 모두 접근 허용
           // .antMatchers("/api/v1/users/**").hasAnyRole("USER", "MASTER") // ex: user요청에는 해당 설정 권한을 요구함
         

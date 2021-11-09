@@ -32,6 +32,8 @@ public enum Const {
   , PASSWD_DOC("PasswdSearch") // 비밀번호찾기 메일 문서 이름
   , RE_SEND_TARGET_SIGN("signup") // 인증키 재전송 타켓
   , RE_SEND_TARGET_PASS("passwd") // 인증키 재전송 타켓
+  , MY_INFO_HOME("HOME") // 나의정보(간략)
+  , MY_INFO_MYPAGE("MYPAGE") // 나의정보(상세)
   ;
 
   public String val;
