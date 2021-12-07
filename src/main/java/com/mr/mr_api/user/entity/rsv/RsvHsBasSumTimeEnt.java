@@ -7,17 +7,18 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class RsvHsBasItemEnt {
+public class RsvHsBasSumTimeEnt {
   private String id;
   private String storeId;
   private String itemId;
   private String userId;
-  private String rsvDate;
+  private String rsvTms;
   private String dayCd;
-  private int rsvPer;
+  private String rsvPer;
   private String statusCd;
-  private String createDt;
-  private String modifyDt;
-  private int perTm;
-  private int rsvPerSum;
+  private String createTms;
+  private String modifyTms;
+  private int sumRsvPer;
+  private String storeRsvDayId;
+  private String storeRsvTimeId;
 }

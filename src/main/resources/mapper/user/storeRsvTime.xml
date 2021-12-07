@@ -21,9 +21,10 @@
 			</if>
 	</select>
 
-  <select id="getListOfDay" resultType="com.mr.mr_api.user.entity.time.TimeRsvEnt">
+  <select id="getListOfDay" resultMap="rsvTimeDay">
 		SELECT 
-			`srt`.`store_rsv_day_id`
+			`srt`.`id`
+			,`srt`.`store_rsv_day_id`
 			,`srt`.`rsv_tm`
 			,`srt`.`create_tms`
 		FROM tb_store_rsv_time `srt`
@@ -32,5 +33,44 @@
 			`srd`.`store_id` = #{storeId}
 			AND `srd`.`day_cd` = #{dayCd}
   </select>
+
+	<resultMap id="rsvTimeDay" type="com.mr.mr_api.user.entity.time.RsvTimeDayEnt">
+		<result property="id" column="id" />
+		<collection
+			column="id"
+			property="personOption"
+			javaType="java.util.List"
+			ofType="com.mr.mr_api.user.entity.person.PersonOptionEnt"
+			select="getPersonOption"
+		>
+		</collection>
+	</resultMap>
+
+	<select id="getPersonOption" resultType="com.mr.mr_api.user.entity.person.PersonOptionEnt">
+		SELECT
+			`tpo`.`num_person`
+			,`tpo`.`max_yn`
+			,`tpo`.`min_yn`
+			,`tpo`.`per_person_yn`
+			,`tpo`.`limit_yn`
+		FROM tb_person_option `tpo`
+		WHERE
+			`tpo`.`store_rsv_time_id` = #{id}
+	</select>
+
+	<select id="getListAfterNowTime" resultType="String">
+		SELECT
+			`srd`.`id`
+			,`srd`.`store_id`
+			,`srd`.`day_cd`
+			,`srd`.`create_tms`
+			,`srt`.`rsv_tm`
+		FROM tb_store_rsv_day `srd`
+		LEFT JOIN tb_store_rsv_time `srt` ON `srd`.`id` = `srt`.`store_rsv_day_id`
+		WHERE
+			`srd`.`store_id` = #{storeId}
+			AND `srd`.`day_cd` = #{dayCd}
+			AND `srt`.`rsv_tm` > #{nowTime}
+	</select>
 
 </mapper>

@@ -7,10 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class RsvSumPerSvc {
+public class RsvHsBasOneSvc {
   private String storeId;
-  private String itemId;
-  private String rsvTms;
-  private String dayCd;
-  private String statusCd;
+  private String rsvDt;
 }

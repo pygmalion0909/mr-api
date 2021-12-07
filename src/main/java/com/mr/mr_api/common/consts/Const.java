@@ -12,6 +12,7 @@ public enum Const {
 
   , FL_G_STO_MAIN_IMG("STOMAIN") // 파일 가게 이미지 그룹명
   , FL_G_STO_BAS_IMG("STOBAS") // 파일 가게 이미지 그룹명
+  , FL_G_ITEM_IMG("ITEM") // 파일 아이템 이미지 그룹명
 
   , STATUS_CD_Y("Y") // yes
   , STATUS_CD_N("N") // no

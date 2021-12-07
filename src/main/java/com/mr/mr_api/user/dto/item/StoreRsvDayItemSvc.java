@@ -7,9 +7,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ItemRsvSvc {
-  private String id;
-  private String storeId;
+public class StoreRsvDayItemSvc {
   private String dayCd;
-  private String createTms;
+  private String storeId;
+  private String baseImgUrl;
+  private String imgGroup;
 }

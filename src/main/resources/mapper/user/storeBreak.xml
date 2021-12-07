@@ -4,7 +4,6 @@
 <mapper namespace="com.mr.mr_api.user.repository.StoreBreakRepository">
 
 	<select id="getListOfMonth" resultType="com.mr.mr_api.user.entity.storeBreak.StoreBreakDtEnt">
-	/** getListOfMonth **/
 		SELECT 
 			`stb`.`store_id`
 			,DATE_FORMAT(`stb`.`bk_st_tms`, "%Y-%m-%d") AS `bk_st_dt`

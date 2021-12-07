@@ -15,9 +15,6 @@ import lombok.ToString;
 public class RsvRegisterCnt {
   @NotBlank(message = Verif.NOTBLANK)
   private String storeId;
-  private String userId;
-  @NotBlank(message = Verif.NOTBLANK)
-  private String itemId;
   @NotBlank(message = Verif.NOTBLANK)
   private String rsvDt;
   @NotBlank(message = Verif.NOTBLANK)
@@ -26,4 +23,12 @@ public class RsvRegisterCnt {
   private String dayCd;
   @Min(value = 1, message = Verif.MIN)
   private int rsvPer;
+  @NotBlank(message = Verif.NOTBLANK)
+  private String rsvName;
+  @NotBlank(message = Verif.NOTBLANK)
+  private String rsvNumber;
+  private String userId;
+  private String itemId;
+  private String rsvRequest;
+  private String rsvPrice;
 }

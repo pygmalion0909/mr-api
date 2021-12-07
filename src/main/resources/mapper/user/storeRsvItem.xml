@@ -2,9 +2,75 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mr.mr_api.user.repository.StoreRsvItemRepository">
-  
-	<select id="getOne" resultType="com.mr.mr_api.user.entity.item.StoreRsvItemEnt">
+
+	<select id="getList" resultType="com.mr.mr_api.user.entity.item.StoreRsvItemEnt">
+		SELECT
+			`sri`.`store_rsv_day_id`
+			,`sri`.`item_id`
+			,`sri`.`create_tms`
+			,`srd`.`id`
+			,`srd`.`store_id`
+			,`srd`.`day_cd`
+		FROM tc_store_rsv_item `sri`
+		LEFT JOIN tb_store_rsv_day `srd` ON `sri`.`store_rsv_day_id` = `srd`.`id`
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="storeId != null and storeId != ''">
+				AND `srd`.`store_id` = #{storeId}
+			</if>
+			<if test="dayCd != null and dayCd != ''">
+				AND `srd`.`day_cd` = #{dayCd}
+			</if>
+		</trim>
+	</select>
+
+	<select id="getListOfDay" resultMap="rsvItemDay">
 		SELECT 
+			`sq1`.*
+			,`srd`.`day_cd`
+		FROM (
+			SELECT 
+				`sri`.`id`
+				,`sri`.`store_rsv_day_id`
+				,`sri`.`item_id`
+				,`tib`.`store_id`
+				,`tib`.`name`
+				,`tib`.`desc`
+				,`tib`.`price`
+				,(SELECT CONCAT(#{baseImgUrl}, '/', `tfi`.`save_name`) FROM tb_file `tfi` WHERE `sri`.`item_id` = `tfi`.`ref_id` AND `tfi`.`group` = #{imgGroup}) AS `img_url`
+			FROM tc_store_rsv_item `sri`
+			LEFT JOIN tb_item_bas `tib` ON `sri`.`item_id` = `tib`.`id`
+		) `sq1`
+		LEFT JOIN tb_store_rsv_day `srd` ON `sq1`.`store_rsv_day_id` = `srd`.`id`
+		WHERE
+			`srd`.`day_cd` = #{dayCd}
+			AND `srd`.`store_id` = #{storeId}
+	</select>
+
+	<resultMap id="rsvItemDay" type="com.mr.mr_api.user.entity.item.RsvItemDayEnt">
+		<collection
+			column="id"
+			property="personOption"
+			javaType="java.util.List"
+			ofType="com.mr.mr_api.user.entity.person.PersonOptionEnt"
+			select="getPersonOption"
+		>
+		</collection>
+	</resultMap>
+
+	<select id="getPersonOption" resultType="com.mr.mr_api.user.entity.person.PersonOptionEnt">
+		SELECT
+			`tpo`.`num_person`
+			,`tpo`.`max_yn`
+			,`tpo`.`min_yn`
+			,`tpo`.`per_person_yn`
+			,`tpo`.`limit_yn`
+		FROM tb_person_option `tpo`
+		WHERE
+			`tpo`.`store_rsv_item_id` = #{id}
+	</select>
+
+	<select id="getOne" resultType="com.mr.mr_api.user.entity.item.StoreRsvItemEnt">
+		SELECT
 			`sri`.`store_rsv_day_id`
 			,`sri`.`item_id`
 			,`sri`.`create_tms`

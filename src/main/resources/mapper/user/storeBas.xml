@@ -5,7 +5,7 @@
 
 	<select id="getListOfInfo" resultType="com.mr.mr_api.user.entity.store.StoreListEnt">
 		SELECT
-			`s1`.*
+			`sq1`.*
 		FROM
 		(
 			SELECT 
@@ -42,21 +42,21 @@
 					AND `sto`.`sub_sector_cd` = #{subSectorCd}
 				</if>
 			</trim>
-		)`s1`
+		)`sq1`
 		<trim prefix="WHERE" prefixOverrides="AND|OR">
 			<if test="badgeCd != null and badgeCd != '' and badgeCd.length > 0">
-				`s1`.`badge_cd` IN
+				`sq1`.`badge_cd` IN
 				<foreach collection="badgeCd" item="item" open="(" separator="," close=")">#{item}</foreach>
 			</if>
 			<if test="areaSiCd != null and areaSiCd != ''">
-				AND `s1`.`area_si_cd` = #{areaSiCd}
+				AND `sq1`.`area_si_cd` = #{areaSiCd}
 			</if>
 			<if test="areaGuCd != null and areaGuCd != '' and areaGuCd.length > 0">
-				AND `s1`.`area_gu_cd` IN 
+				AND `sq1`.`area_gu_cd` IN 
 				<foreach collection="areaGuCd" item="item" open="(" separator="," close=")">#{item}</foreach>
 			</if>
 		</trim>
-		GROUP BY `s1`.`id`
+		GROUP BY `sq1`.`id`
 		LIMIT #{limit} OFFSET #{offset}
 	</select>
 
@@ -65,7 +65,7 @@
 			COUNT(`s2`.`id`)
 		FROM (
 			SELECT
-				`s1`.*
+				`sq1`.*
 			FROM
 			(
 				SELECT 
@@ -100,21 +100,21 @@
 						AND `sto`.`sub_sector_cd` = #{subSectorCd}
 					</if>
 				</trim>
-			)`s1`
+			)`sq1`
 			<trim prefix="WHERE" prefixOverrides="AND|OR">
 				<if test="badgeCd != null and badgeCd != '' and badgeCd.length > 0">
-					`s1`.`badge_cd` IN 
+					`sq1`.`badge_cd` IN 
 					<foreach collection="badgeCd" item="item" open="(" separator="," close=")">#{item}</foreach>
 				</if>
 				<if test="areaSiCd != null and areaSiCd != ''">
-					AND `s1`.`area_si_cd` = #{areaSiCd}
+					AND `sq1`.`area_si_cd` = #{areaSiCd}
 				</if>
 				<if test="areaGuCd != null and areaGuCd != '' and areaGuCd.length > 0">
-					AND `s1`.`area_gu_cd` IN 
+					AND `sq1`.`area_gu_cd` IN 
 					<foreach collection="areaGuCd" item="item" open="(" separator="," close=")">#{item}</foreach>
 				</if>
 			</trim>
-			GROUP BY `s1`.`id`
+			GROUP BY `sq1`.`id`
 		)`s2`
 	</select>
 
@@ -123,6 +123,9 @@
 			`bas`.`id`
 			,`bas`.`user_id`
 			,`bas`.`name`
+			,`bas`.`one_line_intro`
+			,`bas`.`url`
+			,`bas`.`notice`
 			,`bas`.`address`
 			,`bas`.`number`
 			,`bas`.`create_dt`
@@ -140,6 +143,7 @@
 			,`bas`.`wd_ed_wk_tm`
 			,`bas`.`we_st_wk_tm`
 			,`bas`.`we_ed_wk_tm`
+			,`bas`.`all_item_rsv_mode`
 		FROM 
 			tb_store_bas `bas`
 		WHERE

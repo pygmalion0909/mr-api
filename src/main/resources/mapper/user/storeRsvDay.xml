@@ -3,37 +3,15 @@
 
 <mapper namespace="com.mr.mr_api.user.repository.StoreRsvDayRepository">
 
-  <select id="getListOfBreakDay" resultType="com.mr.mr_api.user.entity.day.StoreBreakDayEnt">
-    /** getListOfBreakDay **/
-    SELECT
-      `sq2`.*
-    FROM 
-      (
-        SELECT 
-          `sq1`.*
-          ,COUNT(`sri`.`item_id`) AS count_item 
-        FROM
-        (
-          SELECT
-            `srd`.`id`
-            ,`tbc`.`cd` AS `day_cd`
-            ,`srd`.`store_id`
-            ,COUNT(`srt`.`rsv_tm`) AS count_time
-          FROM 
-            tb_code `tbc`
-          LEFT JOIN tb_store_rsv_day `srd` ON `tbc`.`cd` = `srd`.`day_cd`
-          LEFT JOIN tb_store_rsv_time `srt` ON `srd`.`id` = `srt`.`store_rsv_day_id`
-          WHERE
-            `tbc`.`group` = #{group}
-          GROUP BY `srd`.`day_cd`
-        ) `sq1`
-        LEFT JOIN tc_store_rsv_item `sri` ON `sq1`.`id` = `sri`.`store_rsv_day_id`
-        GROUP BY `sq1`.`day_cd`
-      ) `sq2`
-      WHERE 
-        `sq2`.`store_id` IS NULL
-        OR `sq2`.`count_time` <![CDATA[ <= ]]> 0
-        OR `sq2`.`count_item` <![CDATA[ <= ]]> 0
+  <select id="getListOfWorkDay" resultType="String">
+    SELECT 
+      `srd`.`day_cd`
+    FROM tb_store_rsv_day `srd`
+    LEFT JOIN tb_store_rsv_time `srt` ON `srd`.`id` = `srt`.`store_rsv_day_id`
+    WHERE
+      `srd`.`store_id` = #{storeId}
+      AND `srt`.`store_rsv_day_id` IS NOT NULL
+    GROUP BY `srt`.`store_rsv_day_id`
   </select>
 
 </mapper>

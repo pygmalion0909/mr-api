@@ -37,7 +37,7 @@ public class MyPageContorller {
    */
   @GetMapping("/info")
   public ResponseEntity<ResEnt> getMyInfo(@Valid String cd, @AuthInfo AuthSvc auth) {
-    
+
     // check target validation
     if(!cd.equals(Const.MY_INFO_HOME.val) && !cd.equals(Const.MY_INFO_MYPAGE.val)) {
       List<Object> errList = new ArrayList<>();

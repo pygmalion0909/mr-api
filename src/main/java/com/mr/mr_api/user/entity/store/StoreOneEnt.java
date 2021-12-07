@@ -9,7 +9,10 @@ public class StoreOneEnt {
   private String id;
   private String userId;
   private String name;
+  private String oneLineIntro;
   private String address;
+  private String url;
+  private String notice;
   private String areaSiCd;
   private String areaSiName;
   private String areaGuCd;
@@ -24,5 +27,6 @@ public class StoreOneEnt {
   private String wdStWkTm;
   private String wdEdWkTm;
   private String weStWkTm;
-  private String weEdWkTm; 
+  private String weEdWkTm;
+  private String allItemRsvMode;
 }

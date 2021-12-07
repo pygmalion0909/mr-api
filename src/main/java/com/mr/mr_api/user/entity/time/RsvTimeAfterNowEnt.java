@@ -7,9 +7,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class TimeRsvEnt {
-  private String storeRsvDayId;
+public class RsvTimeAfterNowEnt {
+  private String id;
+  private String storeId;
+  private String dayCd;
   private String rsvTm;
-  private String createTms;
-  private String status;
 }

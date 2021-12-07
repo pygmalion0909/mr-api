@@ -3,10 +3,70 @@
 
 <mapper namespace="com.mr.mr_api.user.repository.RsvHsBasRepository">
 
-  <select id="getRsvCompletedItems" resultType="com.mr.mr_api.user.entity.rsv.RsvHsBasItemEnt">
+  <select id="getOne" resultType="com.mr.mr_api.user.entity.rsv.RsvHsBasOneEnt">
     SELECT
+      `rhb`.`id`
+      ,`rhb`.`store_id`
+      ,`rhb`.`user_id`
+      ,`rhb`.`rsv_name`
+      ,`rhb`.`rsv_number`
+      ,`rhb`.`rsv_request`
+      ,`rhb`.`item_id`
+      ,`rhb`.`rsv_price`
+      ,`rhb`.`rsv_tms`
+      ,`rhb`.`day_cd`
+      ,`rhb`.`rsv_per`
+      ,`rhb`.`status_cd`
+      ,`rhb`.`create_tms`
+      ,`rhb`.`modify_tms`
+    FROM tb_rsv_hs_bas `rhb`
+    WHERE
+      `rhb`.`store_id` = #{storeId}
+      <if test="rsvDt != null and rsvDt != ''">
+        AND DATE_FORMAT(`rhb`.`rsv_tms`, "%Y-%m-%d") = #{rsvDt}
+      </if>
+  </select>
+
+  <select id="getListOfSumItem" resultType="com.mr.mr_api.user.entity.rsv.RsvHsBasSumPerEnt">
+    SELECT 
       `sq1`.*
-      ,`itb`.`per_tm`
+      ,`sri`.`id` AS `store_rsv_item_id`
+    FROM 
+    (
+      SELECT 
+        `rhb`.`id`
+        ,`rhb`.`store_id`
+        ,`rhb`.`item_id`
+        ,`rhb`.`user_id`
+        ,`rhb`.`rsv_tms`
+        ,`rhb`.`day_cd`
+        ,`rhb`.`rsv_per`
+        ,`rhb`.`status_cd`
+        ,`rhb`.`create_tms`
+        ,`rhb`.`modify_tms`
+        ,SUM(`rhb`.`rsv_per`) AS `sum_rsv_per`
+        ,(SELECT `srd`.`id` FROM tb_store_rsv_day `srd` WHERE `rhb`.`day_cd` = `srd`.`day_cd` AND `srd`.`store_id` = #{storeId}) AS `sto_rsv_day_id`
+      FROM tb_rsv_hs_bas `rhb`
+      WHERE
+        `rhb`.`rsv_tms` = #{rsvTms}
+        AND `rhb`.`status_cd` = #{statusCd}
+        AND `rhb`.`store_id` = #{storeId}
+      GROUP BY `rhb`.`item_id`
+    ) `sq1`
+    LEFT JOIN tc_store_rsv_item `sri` ON `sq1`.`item_id` = `sri`.`item_id` AND `sq1`.`sto_rsv_day_id` = `sri`.`store_rsv_day_id`
+  </select>
+
+  <select id="getListOfSumTime" resultType="com.mr.mr_api.user.entity.rsv.RsvHsBasSumTimeEnt">
+    SELECT 
+      `sq1`.*
+      ,(
+        SELECT 
+          `srt`.`id`
+        FROM tb_store_rsv_time `srt`
+        WHERE
+          `srt`.`store_rsv_day_id` = `sq1`.`store_rsv_day_id`
+          AND `srt`.`rsv_tm` = DATE_FORMAT(`sq1`.`rsv_tms`, "%H:%i")
+      ) AS `store_rsv_time_id`
     FROM
     (
       SELECT 
@@ -20,50 +80,36 @@
         ,`rhb`.`status_cd`
         ,`rhb`.`create_tms`
         ,`rhb`.`modify_tms`
-        ,SUM(`rhb`.`rsv_per`) AS `rsv_per_sum`
-      FROM
-        tb_rsv_hs_bas `rhb`
+        ,SUM(`rhb`.`rsv_per`) AS sum_rsv_per
+        ,(SELECT `srd`.`id` FROM tb_store_rsv_day `srd` WHERE `rhb`.`day_cd` = `srd`.`day_cd` AND `srd`.`store_id` = #{storeId}) AS `store_rsv_day_id`
+      FROM tb_rsv_hs_bas `rhb`
       WHERE
-        `rhb`.`rsv_tms` = #{rsvTms}
-        AND `rhb`.`day_cd` = #{dayCd}
+        DATE_FORMAT(`rhb`.`rsv_tms`, "%Y-%m-%d") = #{rsvDt}
         AND `rhb`.`status_cd` = #{statusCd}
-      GROUP BY `rhb`.`item_id`
+        AND `rhb`.`store_id` = #{storeId}
+      GROUP BY `rhb`.`rsv_tms`
     ) `sq1`
-    LEFT JOIN tb_item_bas `itb` ON `sq1`.`item_id` = `itb`.`id`
-    WHERE `sq1`.`rsv_per_sum` = `itb`.`per_tm`
+    LEFT JOIN tb_store_rsv_time `srt` ON `sq1`.`store_rsv_day_id` = `srt`.`id`
   </select>
 
   <select id="getListMonth" resultType="com.mr.mr_api.user.entity.rsv.RsvHsBasMthEnt">
     SELECT
-      `sq1`.`store_id`
-      ,DATE_FORMAT(`sq1`.`rsv_tms`, "%Y-%m-%d") AS `rsv_dt`
-      ,`sq1`.`day_cd`
-      ,COUNT(`sq1`.`rsv_tms`) AS `count_time`
-    FROM (
+      `sq1`.*
+    FROM
+    (
       SELECT
         `rhb`.`store_id`
-        ,`rhb`.`rsv_tms`
         ,`rhb`.`day_cd` 
+        ,DATE_FORMAT(`rhb`.`rsv_tms`, "%Y-%m-%d") AS `rsv_dt`
       FROM tb_rsv_hs_bas `rhb`
       WHERE 
         DATE_FORMAT(`rhb`.`rsv_tms`, "%Y-%m") = #{yearMth}
         AND `rhb`.`status_cd` = #{statusCd}
-      GROUP BY DATE_FORMAT(`rhb`.`rsv_tms`, "%Y-%m-%d %H:%i:%s")
+        AND `rhb`.`store_id` = #{storeId}
+      GROUP BY DATE_FORMAT(`rhb`.`rsv_tms`, "%Y-%m-%d")
     ) `sq1`
-    GROUP BY DATE_FORMAT(`sq1`.`rsv_tms`, "%Y-%m-%d")
-  </select>
-
-  <select id="getRsvSumPer" resultType="String">
-    SELECT
-      SUM(`rhb`.`rsv_per`) AS `sum_rsv_per` 
-    FROM tb_rsv_hs_bas `rhb`
     WHERE
-      `rhb`.`day_cd` = #{dayCd}
-      AND `rhb`.`rsv_tms` = #{rsvTms}
-      AND `rhb`.`store_id` = #{storeId}
-      AND `rhb`.`item_id` = #{itemId}
-      AND `rhb`.`status_cd`= #{statusCd}
-    GROUP BY `rhb`.`rsv_tms`
+      `sq1`.`rsv_dt` >= DATE_FORMAT(now(), "%Y-%m-%d")
   </select>
 
   <insert id="register">
@@ -77,6 +123,10 @@
       ,rsv_per
       ,status_cd
       ,create_tms
+      ,rsv_name
+      ,rsv_request
+      ,rsv_price
+      ,rsv_number
     )
     VALUES
     (
@@ -88,6 +138,10 @@
       ,#{rsvPer}
       ,#{statusCd}
       ,NOW()
+      ,#{rsvName}
+      ,#{rsvRequest}
+      ,#{rsvPrice}
+      ,#{rsvNumber}
     )
   </insert>
 

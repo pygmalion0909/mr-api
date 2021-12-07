@@ -14,7 +14,6 @@ import com.mr.mr_api.user.dto.file.FileSvc;
 import com.mr.mr_api.user.dto.store.StoreListCnt;
 import com.mr.mr_api.user.dto.store.SubSectorListCnt;
 import com.mr.mr_api.user.entity.file.FileEnt;
-import com.mr.mr_api.user.entity.store.StoreBasImgsEnt;
 import com.mr.mr_api.user.entity.store.StoreListEnt;
 import com.mr.mr_api.user.entity.store.StoreOneEnt;
 import com.mr.mr_api.user.repository.BadgeRepository;
@@ -87,16 +86,11 @@ public class StoreService {
     FileSvc fileSvc = new FileSvc();
     fileSvc.setRefId(storeId);
     fileSvc.setGroup(Const.FL_G_STO_BAS_IMG.val);
-
     List<FileEnt> fileList = fileRepository.getList(fileSvc);
-    
+
     // set img url
-    List<StoreBasImgsEnt> list = new ArrayList<>();
-    StoreBasImgsEnt storeBasImgsEnt = new StoreBasImgsEnt();
-    for(FileEnt item : fileList) {
-      storeBasImgsEnt.setImgUrl(baseUrl + imgResourcePath + "/" + item.getSaveName());
-      list.add(storeBasImgsEnt);
-    }
+    List<String> list = new ArrayList<>();
+    for(FileEnt item : fileList) list.add(baseUrl + imgResourcePath + "/" + item.getSaveName());
 
     // set res
     Map<String, Object> result = new HashMap<>();

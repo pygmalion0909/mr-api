@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mr.mr_api.user.repository.PersonOptionRepository">
+
+  <select id="getList" resultType="com.mr.mr_api.user.entity.person.PersonOptionEnt">
+    SELECT 
+      `tpo`.`store_rsv_time_id`
+      ,`tpo`.`store_rsv_item_id`
+      ,`tpo`.`num_person`
+      ,`tpo`.`max_yn`
+      ,`tpo`.`min_yn`
+      ,`tpo`.`per_person_yn`
+      ,`tpo`.`limit_yn`
+    FROM tb_person_option `tpo`
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="storeRsvTimeId != null and storeRsvTimeId != ''">
+        `tpo`.`store_rsv_time_id` = #{storeRsvTimeId}
+      </if>
+      <if test="storeRsvItemId != null and storeRsvItemId != ''">
+        AND `tpo`.`store_rsv_item_id` = #{storeRsvItemId}
+      </if>
+    </trim>
+  </select>
+
+</mapper>

@@ -14,6 +14,5 @@ public interface StoreBasRepository {
   public List<StoreListEnt> getListOfInfo(StoreListCnt storeListCnt);
   public int getTotal(StoreListCnt storeListCnt);
   public StoreOneEnt getOne(String storeId);
-  public StoreOneEnt getStoreDetailImg(String storeId);
 
 }
