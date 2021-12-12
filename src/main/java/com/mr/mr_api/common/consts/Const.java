@@ -9,6 +9,7 @@ public enum Const {
   , CD_G_DAY("DAY") // 코드 요일 그룹명
   , CD_G_SI("AREASI") // 코드 지역(시) 그룹명
   , CD_G_GU("AREAGU") // 코드 지역(구, 군) 그룹명
+  , CD_G_REPORT("REPORT") // 코드 공지사항 그룹명
 
   , FL_G_STO_MAIN_IMG("STOMAIN") // 파일 가게 이미지 그룹명
   , FL_G_STO_BAS_IMG("STOBAS") // 파일 가게 이미지 그룹명

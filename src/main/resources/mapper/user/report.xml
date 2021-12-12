@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mr.mr_api.user.repository.ReportRepository">
+
+  <select id="getList" resultType="com.mr.mr_api.user.entity.report.ReportListEnt">
+    SELECT
+      `trb`.`id`
+      ,`trb`.`category_cd`
+      ,`trb`.`title`
+      ,`trb`.`short_contents`
+      ,`trb`.`create_tms`
+      ,`trb`.`modify_tms`
+      ,`cod`.`name`
+    FROM tb_report_bas `trb`
+    LEFT JOIN tb_code `cod` ON `trb`.`category_cd` = `cod`.`cd` AND `cod`.`group` = #{group}
+    ORDER BY `trb`.`create_tms` DESC
+    LIMIT #{limit} OFFSET #{offset}
+  </select>
+
+  <select id="getListTotal" resultType="int">
+    SELECT
+      COUNT(`trb`.`id`) AS total
+    FROM tb_report_bas `trb`
+    LEFT JOIN tb_code `cod` ON `trb`.`category_cd` = `cod`.`cd` AND `cod`.`group` = #{group}
+  </select>
+
+  <select id="getDetail" resultType="com.mr.mr_api.user.entity.report.ReportDetailEnt">
+    SELECT
+      `trb`.`id`
+      ,`trb`.`category_cd`
+      ,`trb`.`title`
+      ,`trb`.`contents`
+      ,`trb`.`create_tms`
+      ,`trb`.`modify_tms`
+      ,`cod`.`name`
+      ,(SELECT id FROM tb_report_bas WHERE id <![CDATA[ < ]]> #{reportId} ORDER BY id DESC LIMIT 1) AS `prev_id`
+      ,(SELECT id FROM tb_report_bas WHERE id <![CDATA[ > ]]> #{reportId} ORDER BY id LIMIT 1) AS `next_id`
+    FROM tb_report_bas `trb`
+    LEFT JOIN tb_code `cod` ON `trb`.`category_cd` = `cod`.`cd` AND `cod`.`group` = #{group}
+    WHERE
+      `trb`.`id` = #{reportId}
+  </select>
+
+  <select id="getDisplay" resultType="com.mr.mr_api.user.entity.report.ReportDisplayEnt">
+    SELECT
+      `trb`.`id`
+      ,`trb`.`category_cd`
+      ,`trb`.`title`
+      ,`cod`.`name`
+    FROM tb_report_bas `trb`
+    LEFT JOIN tb_code `cod` ON `trb`.`category_cd` = `cod`.`cd` AND `cod`.`group` = #{group}
+    WHERE
+      `trb`.`display_yn` = #{statusCd}
+  </select>
+
+</mapper>
