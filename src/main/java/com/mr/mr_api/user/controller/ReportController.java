@@ -1,7 +1,5 @@
 package com.mr.mr_api.user.controller;
 
-import javax.websocket.server.PathParam;
-
 import com.mr.mr_api.common.dto.Paging;
 import com.mr.mr_api.common.entity.ResEnt;
 import com.mr.mr_api.common.handler.ResHandler;
